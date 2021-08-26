@@ -4,7 +4,8 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install git
-      - run: git clone https://github.com/AxiomSamarth/go-release-consume
-      - run: cd go-release-consume
-      - run: cat README.md
+      - run: |
+          sudo apt-get install git
+          git clone https://github.com/AxiomSamarth/go-release-consume
+          cd go-release-consume
+          cat README.md
