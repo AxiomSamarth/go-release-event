@@ -1,0 +1,9 @@
+name: learn-github-actions
+on: [release]
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - run: apt-get install git
+      - run: git clone https://github.com/AxiomSamarth/go-release-consume
+      - run: cat > README.md
