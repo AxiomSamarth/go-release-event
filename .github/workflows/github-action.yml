@@ -9,15 +9,29 @@ jobs:
           sudo apt-get install git
 
           # get the latest release version of the repository
-          version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
-          version=$(echo $version | tr -d \")
+          new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
+          new_version=$(echo $version | tr -d \")
+          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $new_version)
 
           # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
+          git checkout -b update-dependencies
 
           # navigate to dependant repository
           cd go-release-consume
-          sed -i 's/github.com\/AxiomSamarth\/go-release-event.*/github.com\/AxiomSamarth\/go-release-event $version/' go.mod
+          old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
+
+          # update the go.mod file of dependant project to the latest release version of this project
+          sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
+
+          go mod vendor
+          go mod tidy
+
+          git add *
+          git commit -m "automated vendoring of latest release of go-release-event"
+          git push origin update-dependencies
+          hub pull-request --base main --head update-dependencies
+        
 
 
           
