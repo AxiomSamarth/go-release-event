@@ -3,6 +3,9 @@ on: [release]
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_USER: ${{ secrets.USERNAME }}
+      GITHUB_PASSWORD: ${{ secrets.PASSWORD }}
     steps:
       - run: |
           # install git and go
