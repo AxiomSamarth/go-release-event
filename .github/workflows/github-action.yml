@@ -12,7 +12,7 @@ jobs:
           # install git
           sudo apt-get update
           sudo apt-get install git
-          sudo apt install golang-go:1.16
+          sudo apt install golang-go
 
           # get the latest release version of the repository
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
