@@ -14,7 +14,7 @@ jobs:
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
           echo "New version after curl" $new_version
 
-          new_version=$(echo $version | tr -d \")
+          new_version=$(echo $new_version | xargs)
           echo "New version after trim" $new_version
           
           new_version=$(echo "github.com/AxiomSamarth/go-release-event" $new_version)
