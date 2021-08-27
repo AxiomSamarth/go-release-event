@@ -6,6 +6,9 @@ on:
 jobs:
   update-projects:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_USER: ${{ secrets.USERNAME }}
+      GITHUB_PASSWORD: ${{ secrets.PASSWORD }}
     steps:
       - name: Vendor the dependecies into referring projects
         run: |
