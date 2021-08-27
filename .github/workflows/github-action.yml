@@ -5,7 +5,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          # install git
           sudo apt-get install git
+
+          # get the latest release version of the repository
+          version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
+          version=$(echo $version | tr -d \")
+
+          # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
+
+          # navigate to dependant repository
           cd go-release-consume
-          cat README.md
+          sed -i 's/github.com\/AxiomSamarth\/go-release-event.*/github.com\/AxiomSamarth\/go-release-event $version/' go.mod
+
+
+          
