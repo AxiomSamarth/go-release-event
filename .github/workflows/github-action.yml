@@ -21,10 +21,10 @@ jobs:
           
           # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
-          git remote set-url origin https://AxiomSamarth:${{ secrets.GITHUB_TOKEN }}@github.com/AxiomSamarth/go-release-consume.git
 
           # navigate to dependant repository
           cd go-release-consume
+          git remote set-url origin https://AxiomSamarth:${{ secrets.GITHUB_TOKEN }}@github.com/AxiomSamarth/go-release-consume.git
           old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
 
           echo "Old version:$old_version New version:$new_version"
