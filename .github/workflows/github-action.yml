@@ -24,7 +24,7 @@ jobs:
 
           # navigate to dependant repository
           cd go-release-consume
-          git remote set-url origin https://AxiomSamarth:${{ secrets.GITHUB_TOKEN }}@github.com/AxiomSamarth/go-release-consume.git
+          git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume
           old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
 
           echo "Old version:$old_version New version:$new_version"
@@ -45,7 +45,7 @@ jobs:
 
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
-          git push origin update-dependencies
+          git push  --force --quiet https://AxiomSamarth:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume update-dependencies:update-dependencies
           hub pull-request --base main --head update-dependencies -m "update release-event dependencies"
         
 
