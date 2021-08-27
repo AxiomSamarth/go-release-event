@@ -4,15 +4,11 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          USERNAME: ${{ secrets.USERNAME }}
-        run: |
+      - run: |
           # install git
           sudo apt-get update
           sudo apt-get install git
-          sudo apt install golang-go
+          sudo apt install golang-go:1.16
 
           # get the latest release version of the repository
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
@@ -46,8 +42,8 @@ jobs:
 
           # configure github.com/AxiomSamarth/go-release-event
 
-          git config --global user.email $EMAIL
-          git config --global user.name $USERNAME
+          git config --global user.email deyagondsamarth@gmail.com
+          git config --global user.name AxiomSamarth
 
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
