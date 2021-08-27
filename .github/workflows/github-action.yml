@@ -4,15 +4,10 @@ jobs:
   check-version:
     runs-on: ubuntu-latest
     steps:
-      - shell: bash
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
+      - run: |
           # install git
           sudo apt-get install git
           sudo apt install golang-go
-          
-          echo $GITHUB_TOKEN
 
           # get the latest release version of the repository
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
@@ -26,6 +21,7 @@ jobs:
           
           # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
+          git remote set-url origin https://AxiomSamarth:${{ secrets.GITHUB_TOKEN }}@github.com/AxiomSamarth/go-release-consume.git
 
           # navigate to dependant repository
           cd go-release-consume
