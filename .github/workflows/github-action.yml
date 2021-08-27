@@ -6,14 +6,20 @@ jobs:
     steps:
       - run: |
           # install git
+          sudo apt-get update
           sudo apt-get install git
           sudo apt install golang-go
 
           # get the latest release version of the repository
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
-          new_version=$(echo $version | tr -d \")
-          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $new_version)
+          echo "New version after curl" $new_version
 
+          new_version=$(echo $version | tr -d \")
+          echo "New version after trim" $new_version
+          
+          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $new_version)
+          echo "New version final" $new_version
+          
           # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
 
@@ -27,7 +33,9 @@ jobs:
           git checkout -b update-dependencies
           sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
 
+          echo "Read go.mod\n"
           cat go.mod
+          echo "\n\n"
 
           go mod vendor
           go mod tidy
