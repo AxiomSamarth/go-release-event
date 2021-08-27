@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          # install git
+          # install git and go
           sudo apt-get install git
           sudo apt install golang-go
 
@@ -24,7 +24,10 @@ jobs:
 
           # navigate to dependant repository
           cd go-release-consume
+
           git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume
+          echo "github.com:\n- user: AxiomSamarth\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
+
           old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
 
           echo "Old version:$old_version New version:$new_version"
@@ -32,8 +35,6 @@ jobs:
           # update the go.mod file of dependant project to the latest release version of this project
           git checkout -b update-dependencies
           sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
-          
-          cat go.mod
 
           go mod vendor
           go mod tidy
@@ -46,6 +47,7 @@ jobs:
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
           git push  --force --quiet https://AxiomSamarth:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume update-dependencies:update-dependencies
+          
           hub pull-request --base main --head update-dependencies -m "update release-event dependencies"
         
 
