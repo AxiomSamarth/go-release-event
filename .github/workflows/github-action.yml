@@ -15,13 +15,13 @@ jobs:
 
           # clone the dependant repository
           git clone https://github.com/AxiomSamarth/go-release-consume
-          git checkout -b update-dependencies
 
           # navigate to dependant repository
           cd go-release-consume
           old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
 
           # update the go.mod file of dependant project to the latest release version of this project
+          git checkout -b update-dependencies
           sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
 
           go mod vendor
@@ -30,7 +30,7 @@ jobs:
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
           git push origin update-dependencies
-          hub pull-request --base main --head update-dependencies
+          hub pull-request --base main --head update-dependencies -m "update release-event dependencies"
         
 
 
