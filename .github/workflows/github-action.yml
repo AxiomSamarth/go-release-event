@@ -7,6 +7,7 @@ jobs:
       - run: |
           # install git
           sudo apt-get install git
+          sudo apt install golang-go
 
           # get the latest release version of the repository
           new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
@@ -20,9 +21,13 @@ jobs:
           cd go-release-consume
           old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
 
+          echo "Old version:$old_version New version:$new_version"
+
           # update the go.mod file of dependant project to the latest release version of this project
           git checkout -b update-dependencies
           sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
+
+          cat go.mod
 
           go mod vendor
           go mod tidy
