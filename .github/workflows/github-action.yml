@@ -6,8 +6,7 @@ jobs:
     steps:
       - shell: bash
         env:
-            EMAIL: ${{ secrets.email }}
-            USERNAME: ${{ secrets.username }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # install git
           sudo apt-get install git
