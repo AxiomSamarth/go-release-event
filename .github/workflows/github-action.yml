@@ -20,7 +20,7 @@ jobs:
           echo "New version final" $new_version
           
           # clone the dependant repository
-          git clone https://github.com/AxiomSamarth/go-release-consume
+          git clone https://github.com/AxiomSamarth/go-release-consume.git
 
           # navigate to dependant repository
           cd go-release-consume
