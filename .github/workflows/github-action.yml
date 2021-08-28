@@ -9,51 +9,43 @@ jobs:
     env:
       GITHUB_USER: ${{ secrets.USERNAME }}
       GITHUB_PASSWORD: ${{ secrets.PASSWORD }}
+      GITHUB_EMAIL: ${{ secrets.EMAIL }}
+      REPO_OWNER: ${{ secrets.USERNAME }}
     steps:
-      - name: Vendor the dependecies into referring projects
+      - name: Install Git and Golang
         run: |
-          # install git and go
           sudo apt-get install git
           sudo apt install golang-go
-
-          # get the latest release version of the repository
-          new_version=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/AxiomSamarth/go-release-event/releases/latest | jq '.tag_name')
-          echo "New version after curl" $new_version
-
-          new_version=$(echo $new_version | xargs)
-          echo "New version after trim" $new_version
-
-          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $new_version)
-          echo "New version final" $new_version
-
-          # clone the dependant repository
-          git clone https://github.com/AxiomSamarth/go-release-consume.git
-
-          # navigate to dependant repository
-          cd go-release-consume
-
-          git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume
+      
+      - name: Configure Git
+        run: |
           echo "github.com:\n- user: AxiomSamarth\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
-
-          old_version=$(cat go.mod | grep github.com/AxiomSamarth/go-release-event | xargs)
-
-          # update the go.mod file of dependant project to the latest release version of this project
+          git config --global user.email $GITHUB_EMAIL
+          git config --global user.name $REPO_OWNER
+        
+      - name: Clone the dependant project, configure git repo and create a new update-dependencies branch
+        run: |
+          git clone https://github.com/$REPO_OWNER/go-release-consume.git
+          git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume
+          
+          cd go-release-consume
           git checkout -b update-dependencies
-          sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
 
+      - name: Update the dependencies to the lates version
+        run: |
+          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $(curl -H "Accept: application/vnd.github.v3+json" \
+                        https://api.github.com/repos/$REPO_OWNER/go-release-event/releases/latest | jq '.tag_name' | xargs))
+          old_version=$(cat go.mod | grep github.com/$REPO_OWNER/go-release-event | xargs)
+          sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
           go mod vendor
           go mod tidy
 
-          # configure github.com/AxiomSamarth/go-release-event
-
-          git config --global user.email deyagondsamarth@gmail.com
-          git config --global user.name AxiomSamarth
-
+      - name: Push the updates and raise a pull request
+        run: |
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
-          git push  --force --quiet https://AxiomSamarth:${{ secrets.TOKEN }}@github.com/AxiomSamarth/go-release-consume update-dependencies:update-dependencies
-
-          hub pull-request --base main --head update-dependencies -m "update release-event dependencies"
+          git push  --force --quiet https://$REPO_OWNER:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume update-dependencies:update-dependencies
+          hub pull-request --base main --head update-dependencies -m "Automated Vendoring of latest release of go-release-event\n_Release notes_\n```\ngo-releave-event version $new_version has been vendored.\n```"
                     
         
 
