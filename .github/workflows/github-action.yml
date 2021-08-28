@@ -33,7 +33,7 @@ jobs:
       - name: Update the dependencies to the lates version
         working-directory: ./go-release-consume
         run: |
-          new_version=$(echo "github.com/AxiomSamarth/go-release-event" $(curl -H "Accept: application/vnd.github.v3+json" \
+          new_version=$(echo "github.com/$GITHUB_USER/go-release-event" $(curl -H "Accept: application/vnd.github.v3+json" \
                         https://api.github.com/repos/$REPO_OWNER/go-release-event/releases/latest | jq '.tag_name' | xargs))
           old_version=$(cat go.mod | grep github.com/$REPO_OWNER/go-release-event | xargs)
           sed -i -- 's#'"$old_version"'#'"$new_version"'#g' go.mod
@@ -51,11 +51,7 @@ jobs:
           This is an automated PR by Teddy Winters to update the vendoring of `go-release-events` in this project with the latest release.
 
           _Release notes_
-          
-          ```
-          go-release-event version $new_version has been vendored.
-          ```
-          "
+          `go-release-event version $new_version has been vendored.`"
                     
         
 
