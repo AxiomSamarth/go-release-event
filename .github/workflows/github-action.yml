@@ -46,7 +46,7 @@ jobs:
           git add *
           git commit -m "automated vendoring of latest release of go-release-event"
           git push  --force --quiet https://$REPO_OWNER:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume update-dependencies:update-dependencies
-          hub pull-request --base main --head update-dependencies -m "Automated Vendoring of latest release of go-release-event\n_Release notes_\n```\ngo-releave-event version $new_version has been vendored.\n```"
+          hub pull-request --base main --head update-dependencies -m "Automated Vendoring of latest release of go-release-event\n\n_Release notes_\n```\ngo-releave-event version $new_version has been vendored.\n```"
                     
         
 
