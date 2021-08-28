@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_USER: ${{ secrets.USERNAME }}
-      GITHUB_PASSWORD: ${{ secrets.PASSWORD }}
+      GITHUB_PASSWORD: ${{ secrets.TOKEN }}
       GITHUB_EMAIL: ${{ secrets.EMAIL }}
       SRC_REPO_OWNER: ${{ secrets.USERNAME }}
       SRC_REPO_NAME: go-release-event
@@ -20,9 +20,9 @@ jobs:
       
       - name: Configure Git
         run: |
-          echo "github.com:\n- user: $REPO_OWNER\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
+          echo "github.com:\n- user: $GITHUB_USER\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
           git config --global user.email $GITHUB_EMAIL
-          git config --global user.name $REPO_OWNER
+          git config --global user.name $GITHUB_USER
         
       - name: Clone the dependant project, configure git repo and create a new update-dependencies branch
         uses: AxiomSamarth/go-vendor-action@main
