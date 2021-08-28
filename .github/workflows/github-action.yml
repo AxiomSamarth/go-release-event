@@ -49,12 +49,13 @@ jobs:
           hub pull-request --base main --head update-dependencies -F- <<< "Automated Vendoring of latest release of go-release-event
           
           This is an automated PR by Teddy Winters to update the vendoring of `go-release-events` in this project with the latest release.
-          
+
           _Release notes_
           
           ```
           go-release-event version $new_version has been vendored.
-          ```"
+          ```
+          "
                     
         
 
