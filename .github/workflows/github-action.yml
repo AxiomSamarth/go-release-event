@@ -28,4 +28,4 @@ jobs:
         uses: AxiomSamarth/go-vendor-action@main
         with:
           destination_repo_owner: AxiomSamarth
-          destination_repo_name: go-event-consume        
+          destination_repo_name: go-release-consume        
