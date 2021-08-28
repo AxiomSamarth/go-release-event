@@ -19,16 +19,15 @@ jobs:
       
       - name: Configure Git
         run: |
-          echo "github.com:\n- user: AxiomSamarth\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
+          echo "github.com:\n- user: $REPO_OWNER\n  oauth_token: ${{ secrets.TOKEN }}\n  protocol: https" > ~/.config/hub
           git config --global user.email $GITHUB_EMAIL
           git config --global user.name $REPO_OWNER
         
       - name: Clone the dependant project, configure git repo and create a new update-dependencies branch
         run: |
           git clone https://github.com/$REPO_OWNER/go-release-consume.git
-          git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume
-          
           cd go-release-consume
+          git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume
           git checkout -b update-dependencies
 
       - name: Update the dependencies to the lates version
