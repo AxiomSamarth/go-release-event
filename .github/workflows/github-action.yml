@@ -30,7 +30,7 @@ jobs:
           git remote set-url origin https://.:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume
           git checkout -b update-dependencies
 
-      - name: Update the dependencies to the lates version
+      - name: Update the dependencies to the latest version
         working-directory: ./go-release-consume
         run: |
           new_version=$(echo "github.com/$GITHUB_USER/go-release-event" $(curl -H "Accept: application/vnd.github.v3+json" \
@@ -44,7 +44,7 @@ jobs:
         working-directory: ./go-release-consume
         run: |
           git add *
-          git commit -m "automated vendoring of latest release of go-release-event"
+          git commit -m "automated vendoring of $new_version release of go-release-event"
           git push  --force --quiet https://$REPO_OWNER:${{ secrets.TOKEN }}@github.com/$REPO_OWNER/go-release-consume update-dependencies:update-dependencies
           hub pull-request --base main --head update-dependencies -F- <<< "Automated Vendoring of latest release of go-release-event
           
